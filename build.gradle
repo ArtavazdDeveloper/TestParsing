@@ -1,0 +1,35 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group = 'org.example'
+version = '1.0-SNAPSHOT'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+//tasks.withType(JavaCompile) {
+//    options.encoding = 'UTF-8'
+//}
+application {
+    mainClassName = 'org.example.App'
+   // applicationDefaultJvmArgs = ["-Xmx512m"]
+}
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.0'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.17.0'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.17.0'
+    implementation 'org.apache.commons:commons-csv:1.8'
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+test {
+    useJUnitPlatform()
+}
