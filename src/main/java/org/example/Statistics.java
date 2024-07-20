@@ -19,13 +19,19 @@ public class Statistics {
     }
 
     private void printDuplicates() {
+        if (objects == null) {
+            System.out.println("The objects list is null.");
+            return;
+        }
+
         Map<ObjectData, Long> duplicates = objects.stream()
                 .collect(Collectors.groupingBy(e -> e, Collectors.counting()));
 
+        System.out.println();
         System.out.println("Duplicates:");
         duplicates.entrySet().stream()
                 .filter(entry -> entry.getValue() > 1)
-                .forEach(entry -> System.out.println(entry.getKey() + " - " + entry.getValue() + " times"));
+                .forEach(entry -> System.out.printf("%s - %d times%n", entry.getKey(), entry.getValue()));
     }
 
     private void printGroupWeights() {

@@ -8,6 +8,16 @@ public class ObjectData {
     private long number;
     private long weight;
 
+    public ObjectData() {
+    }
+
+    public ObjectData(String group, String type, long number, long weight) {
+        this.group = group;
+        this.type = type;
+        this.number = number;
+        this.weight = weight;
+    }
+
     public String getGroup() {
         return group;
     }

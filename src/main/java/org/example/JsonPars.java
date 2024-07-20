@@ -1,37 +1,47 @@
 package org.example;
 
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.JsonNode;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class JsonPars {
     public static List<ObjectData> parse(Path filePath) throws IOException {
-        long totalLines = Files.lines(filePath).count();
-        long processedLines = 0;
-
-        ObjectMapper mapper = new ObjectMapper();
         List<ObjectData> objects = new ArrayList<>();
+        ObjectMapper mapper = new ObjectMapper();
+        JsonFactory jsonFactory = mapper.getFactory();
 
-        JsonNode rootNode = mapper.readTree(new File(filePath.toString()));
+        try (JsonParser parser = jsonFactory.createParser(new File(filePath.toString()))) {
+            if (parser.nextToken() != JsonToken.START_ARRAY) {
+                throw new IOException("Expected JSON array");
+            }
 
+            int totalLines = 0;
+            while (parser.nextToken() != JsonToken.END_ARRAY) {
+                totalLines++;
+            }
 
-        if (!rootNode.isArray()) {
-            throw new IOException("Expected JSON array");
-        }
+            parser.close();
 
+            try (JsonParser streamingParser = jsonFactory.createParser(new File(filePath.toString()))) {
+                if (streamingParser.nextToken() != JsonToken.START_ARRAY) {
+                    throw new IOException("Expected JSON array");
+                }
 
-        for (JsonNode node : rootNode) {
-            ObjectData obj = mapper.treeToValue(node, ObjectData.class);
-            objects.add(obj);
-            processedLines++;
-            printProgress(processedLines, totalLines);
+                long processedLines = 0;
+                while (streamingParser.nextToken() != JsonToken.END_ARRAY) {
+                    ObjectData obj = mapper.readValue(streamingParser, ObjectData.class);
+                    objects.add(obj);
+                    processedLines++;
+                    printProgress(processedLines, totalLines);
+                }
+            }
         }
 
         return objects;

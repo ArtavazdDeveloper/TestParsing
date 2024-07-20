@@ -1,0 +1,4 @@
+[
+  {"group": "group1", "type": "type1", "number": 1, "weight": 10},
+  {"group": "group2", "type": "type2", "number": 2, "weight": 20}
+]
