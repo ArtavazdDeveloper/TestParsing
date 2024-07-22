@@ -5,14 +5,16 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JsonPars {
-    public static List<ObjectData> parse(Path filePath) throws IOException {
+public class JsonPars implements Parser {
+    @Override
+    public List<ObjectData> parse(Path filePath) throws IOException {
         List<ObjectData> objects = new ArrayList<>();
         ObjectMapper mapper = new ObjectMapper();
         JsonFactory jsonFactory = mapper.getFactory();
@@ -22,7 +24,7 @@ public class JsonPars {
                 throw new IOException("Expected JSON array");
             }
 
-            int totalLines = 0;
+            long totalLines = 0;
             while (parser.nextToken() != JsonToken.END_ARRAY) {
                 totalLines++;
             }
@@ -47,7 +49,7 @@ public class JsonPars {
         return objects;
     }
 
-    private static void printProgress(long processedLines, long totalLines) {
+    private void printProgress(long processedLines, long totalLines) {
         int progress = (int) ((processedLines * 100) / totalLines);
         System.out.print("\rProcessing JSON: " + progress + "%");
     }

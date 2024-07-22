@@ -19,11 +19,6 @@ public class Statistics {
     }
 
     private void printDuplicates() {
-        if (objects == null) {
-            System.out.println("The objects list is null.");
-            return;
-        }
-
         Map<ObjectData, Long> duplicates = objects.stream()
                 .collect(Collectors.groupingBy(e -> e, Collectors.counting()));
 

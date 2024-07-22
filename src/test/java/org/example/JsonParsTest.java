@@ -15,10 +15,12 @@ import static org.junit.jupiter.api.Assertions.*;
 public class JsonParsTest {
 
     private Path tempFile;
+    private JsonPars jsonPars; // Add an instance variable for JsonPars
 
     @BeforeEach
     void setUp() throws IOException {
         tempFile = Files.createTempFile("test", ".json");
+        jsonPars = new JsonPars(); // Initialize the instance
     }
 
     @AfterEach
@@ -33,7 +35,7 @@ public class JsonParsTest {
         try (FileWriter writer = new FileWriter(tempFile.toFile())) {
             writer.write(jsonData);
         }
-        List<ObjectData> actualObjects = JsonPars.parse(tempFile);
+        List<ObjectData> actualObjects = jsonPars.parse(tempFile); // Use the instance to call parse
         assertNotNull(actualObjects);
         assertEquals(2, actualObjects.size());
 
@@ -56,7 +58,7 @@ public class JsonParsTest {
         try (FileWriter writer = new FileWriter(tempFile.toFile())) {
             writer.write(jsonData);
         }
-        List<ObjectData> actualObjects = JsonPars.parse(tempFile);
+        List<ObjectData> actualObjects = jsonPars.parse(tempFile); // Use the instance to call parse
         assertNotNull(actualObjects);
         assertTrue(actualObjects.isEmpty());
     }
@@ -69,6 +71,6 @@ public class JsonParsTest {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        assertThrows(IOException.class, () -> JsonPars.parse(tempFile));
+        assertThrows(IOException.class, () -> jsonPars.parse(tempFile)); // Use the instance to call parse
     }
 }
