@@ -15,12 +15,13 @@ import static org.junit.jupiter.api.Assertions.*;
 public class JsonParsTest {
 
     private Path tempFile;
-    private JsonPars jsonPars; // Add an instance variable for JsonPars
+    private JsonPars jsonPars;
+    private static final int THREAD_COUNT = 30; // Определите количество потоков
 
     @BeforeEach
     void setUp() throws IOException {
         tempFile = Files.createTempFile("test", ".json");
-        jsonPars = new JsonPars(); // Initialize the instance
+        jsonPars = new JsonPars(THREAD_COUNT); // Инициализация с заданным количеством потоков
     }
 
     @AfterEach
@@ -29,7 +30,7 @@ public class JsonParsTest {
     }
 
     @Test
-    void testParse() throws IOException {
+    void testParse() throws IOException, InterruptedException {
         String jsonData = "[{\"group\":\"group1\",\"type\":\"type1\",\"number\":1,\"weight\":10}," +
                 "{\"group\":\"group2\",\"type\":\"type2\",\"number\":2,\"weight\":20}]";
         try (FileWriter writer = new FileWriter(tempFile.toFile())) {
@@ -53,24 +54,24 @@ public class JsonParsTest {
     }
 
     @Test
-    void testParseWithEmptyArray() throws IOException {
+    void testParseWithEmptyArray() throws IOException, InterruptedException {
         String jsonData = "[]";
         try (FileWriter writer = new FileWriter(tempFile.toFile())) {
             writer.write(jsonData);
         }
-        List<ObjectData> actualObjects = jsonPars.parse(tempFile); // Use the instance to call parse
+        List<ObjectData> actualObjects = jsonPars.parse(tempFile);
         assertNotNull(actualObjects);
         assertTrue(actualObjects.isEmpty());
     }
 
     @Test
     void testParseWithInvalidJson() {
-        String jsonData = "{not an array}";
+        String jsonData = "{\"not\":\"an array\"}"; // Некорректные данные JSON
         try (FileWriter writer = new FileWriter(tempFile.toFile())) {
             writer.write(jsonData);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        assertThrows(IOException.class, () -> jsonPars.parse(tempFile)); // Use the instance to call parse
+        assertThrows(IOException.class, () -> jsonPars.parse(tempFile));
     }
 }

@@ -23,7 +23,7 @@ public class CsvParserTest {
     @BeforeEach
     void setUp() throws IOException {
         tempFile = Files.createTempFile("test", ".csv");
-        csvParser = new CsvParser(); // Initialize the instance
+        csvParser = new CsvParser(4); // Initialize the instance
     }
 
     @AfterEach
@@ -32,7 +32,7 @@ public class CsvParserTest {
     }
 
     @Test
-    void testParse() throws IOException {
+    void testParse() throws IOException, InterruptedException {
         String csvData = "group,type,number,weight\n" +
                 "A,type1,1,10\n" +
                 "B,type2,2,20\n" +

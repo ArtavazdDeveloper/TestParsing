@@ -62,4 +62,14 @@ public class ObjectData {
     public int hashCode() {
         return Objects.hash(group, type, number, weight);
     }
+
+    @Override
+    public String toString() {
+        return "ObjectData{" +
+                "group='" + group + '\'' +
+                ", type='" + type + '\'' +
+                ", number=" + number +
+                ", weight=" + weight +
+                '}';
+    }
 }
