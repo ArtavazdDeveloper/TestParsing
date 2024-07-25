@@ -18,12 +18,12 @@ import static org.junit.jupiter.api.Assertions.*;
 public class CsvParserTest {
 
     private Path tempFile;
-    private CsvParser csvParser; // Add an instance variable for CsvParser
+    private CsvParser csvParser;
 
     @BeforeEach
     void setUp() throws IOException {
         tempFile = Files.createTempFile("test", ".csv");
-        csvParser = new CsvParser(); // Initialize the instance
+        csvParser = new CsvParser(4); // Initialize the instance
     }
 
     @AfterEach
@@ -32,7 +32,7 @@ public class CsvParserTest {
     }
 
     @Test
-    void testParse() throws IOException {
+    void testParse() throws IOException, InterruptedException {
         String csvData = "group,type,number,weight\n" +
                 "A,type1,1,10\n" +
                 "B,type2,2,20\n" +
@@ -40,7 +40,7 @@ public class CsvParserTest {
         try (FileWriter writer = new FileWriter(tempFile.toFile())) {
             writer.write(csvData);
         }
-        List<ObjectData> actualObjects = csvParser.parse(tempFile); // Use the instance to call parse
+        List<ObjectData> actualObjects = csvParser.parse(tempFile);
         assertNotNull(actualObjects);
         assertEquals(3, actualObjects.size());
         assertEquals("A", actualObjects.get(0).getGroup());
@@ -56,7 +56,7 @@ public class CsvParserTest {
         try (FileWriter writer = new FileWriter(tempFile.toFile())) {
             writer.write(csvData);
         }
-        assertDoesNotThrow(() -> csvParser.parse(tempFile)); // Use the instance to call parse
+        assertDoesNotThrow(() -> csvParser.parse(tempFile));
     }
 
     @Test
@@ -68,6 +68,6 @@ public class CsvParserTest {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        assertThrows(IOException.class, () -> csvParser.parse(tempFile)); // Use the instance to call parse
+        assertThrows(IOException.class, () -> csvParser.parse(tempFile));
     }
 }

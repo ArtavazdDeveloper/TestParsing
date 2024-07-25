@@ -3,6 +3,8 @@ package org.example;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+import org.example.ObjectData;
+import org.example.Parser;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -14,10 +16,16 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class CsvParser {
+public class CsvParser implements Parser {
+    private final int threadCount;
 
-    public List<ObjectData> parse(Path filePath, int threadCount) throws IOException, InterruptedException {
-        long totalLines = Files.lines(filePath).count() - 1; // Вычитаем 1, чтобы учесть заголовок
+    public CsvParser(int threadCount) {
+        this.threadCount = threadCount;
+    }
+
+    @Override
+    public List<ObjectData> parse(Path filePath) throws IOException {
+        long totalLines = Files.lines(filePath).count() - 1;
         long chunkSize = totalLines / threadCount;
 
         List<Future<List<ObjectData>>> futures = new ArrayList<>();

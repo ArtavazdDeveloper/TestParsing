@@ -5,5 +5,5 @@ import java.nio.file.Path;
 import java.util.List;
 
 public interface Parser {
-    List<ObjectData> parse(Path filePath) throws IOException;
+    List<ObjectData> parse(Path filePath) throws IOException, InterruptedException;
 }
